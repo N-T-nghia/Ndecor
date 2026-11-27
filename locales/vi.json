@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "TRANG CHỦ",
+    "work": "DỰ ÁN",
+    "studio": "STUDIO",
+    "service": "DỊCH VỤ",
+    "contact": "LIÊN HỆ"
+  },
+  "hero": {
+    "est": "THÀNH LẬP 2025",
+    "location": "ĐỒNG NAI · TÂY BẮC — ĐANG NHẬN DỰ ÁN Q4",
+    "title1": "NDECOR",
+    "title2": "STUDIO",
+    "title3": "ĐỒNG NAI",
+    "note": "NDECOR là studio thiết kế Wabi-Sabi & Japandi tại Đồng Nai. Chúng tôi dựng không gian từ gỗ tái chế, bê tông mộc và tre — nơi mỗi vết sứt mẻ đều có lý do tồn tại.",
+    "hint": "LĂN CHUỘT / PHẢI←→ ĐỂ KHÁM PHÁ"
+  },
+  "work": {
+    "kicker": "01 — DỰ ÁN TIÊU BIỂU",
+    "title": "DỰ ÁN",
+    "years": "2023 → 2026",
+    "drag": "← KÉO ĐỂ XEM THÊM →",
+    "viewAll": "XEM TẤT CẢ SẢN PHẨM · VIEW ALL"
+  },
+  "studio": {
+    "kicker": "02 — VỀ STUDIO",
+    "statement": "Tối giản là xóa bỏ mọi thứ không cần thiết — để lại duy nhất chất riêng của gỗ, đá và sương.",
+    "philLabel": "TRIẾT LÝ / MANIFESTO",
+    "philText": "Chúng tôi không làm web. Chúng tôi dựng không gian sống — nơi bê tông mộc để lại dấu tay, gỗ tái chế giữ thớ cũ, tre uốn theo hình núi. Wabi-Sabi gặp Japandi, sương Đồng Nai gặp gió Tây Bắc.",
+    "projectsLabel": "DỰ ÁN",
+    "projectsCount": "12×",
+    "projectsSub": "DỰ ÁN THỰC HIỆN · ĐỒNG NAI · TÂY BẮC",
+    "clockLabel": "GIỜ ĐỒNG NAI"
+  },
+  "service": {
+    "kicker": "03 — DỊCH VỤ",
+    "viewDetails": "XEM CHI TIẾT DỊCH VỤ · VIEW DETAILS"
+  },
+  "contact": {
+    "kicker": "04 — LIÊN HỆ",
+    "title1": "HÃY CÙNG",
+    "title2": "TẠO NÊN",
+    "title3": "KHÔNG GIAN",
+    "zalo": "ZALO: 0373681667 ↗",
+    "footer": "© 2026 NDECOR® STUDIO"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "HOME",
+    "work": "WORK",
+    "studio": "STUDIO",
+    "service": "SERVICE",
+    "contact": "CONTACT"
+  },
+  "hero": {
+    "est": "EST. 2025",
+    "location": "DONG NAI · NORTHWEST — ACCEPTING Q4",
+    "title1": "NDECOR",
+    "title2": "STUDIO",
+    "title3": "DONG NAI",
+    "note": "NDECOR is a Wabi-Sabi & Japandi design studio based in Dong Nai. We build spaces from reclaimed wood, raw concrete and bamboo — where every crack has a reason to exist.",
+    "hint": "SCROLL / PRESS←→ TO EXPLORE"
+  },
+  "work": {
+    "kicker": "01 — SELECTED WORK",
+    "title": "WORK",
+    "years": "2023 → 2026",
+    "drag": "← DRAG TO EXPLORE →",
+    "viewAll": "VIEW ALL PROJECTS"
+  },
+  "studio": {
+    "kicker": "02 — THE STUDIO",
+    "statement": "Minimalism is erasing everything unnecessary — leaving only the essence of wood, stone and mist.",
+    "philLabel": "PHILOSOPHY / MANIFESTO",
+    "philText": "We don't build websites. We craft living spaces — where raw concrete keeps handprints, reclaimed wood holds its old grain, bamboo bends like the mountains. Wabi-Sabi meets Japandi, Dong Nai mist meets Northwest wind.",
+    "projectsLabel": "PROJECTS",
+    "projectsCount": "12×",
+    "projectsSub": "PROJECTS DELIVERED · DONG NAI · NORTHWEST",
+    "clockLabel": "DONG NAI TIME"
+  },
+  "service": {
+    "kicker": "03 — CAPABILITIES",
+    "viewDetails": "VIEW SERVICE DETAILS"
+  },
+  "contact": {
+    "kicker": "04 — GET IN TOUCH",
+    "title1": "LET'S",
+    "title2": "CREATE",
+    "title3": "SPACE",
+    "zalo": "ZALO: 0373681667 ↗",
+    "footer": "© 2026 NDECOR® STUDIO"
+  }
+}
