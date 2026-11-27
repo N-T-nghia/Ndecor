@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi tiết sản phẩm — NDECOR®</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231E1715'/><rect x='8' y='8' width='16' height='16' fill='%23E8E2D5'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ================================================================
+   CSS TOÀN BỘ (Không phụ thuộc file ngoài)
+   ================================================================ */
+:root{
+  --bg:#201b16; --bg-2:#1a1611; --fg:#E8E2D5; --muted:#a89f93;
+  --line:#2e2822; --ease:cubic-bezier(.16,1,.3,1);
+  --font-display:'Be Vietnam Pro',sans-serif; --font-body:'Be Vietnam Pro',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+body{
+  background-color:var(--bg)!important; 
+  color:var(--fg)!important;
+  font-family:var(--font-body);
+  margin:0; padding:0; overflow-x:hidden;
+  /* Mặc định để con trỏ bình thường, JS sẽ ẩn đi nếu chạy thành công */
+  cursor: auto; 
+}
+body.custom-cursor-active { cursor: none; }
+main{position:relative;z-index:1;min-height:100vh;padding-top:5rem}
+a{color:inherit;text-decoration:none}
+
+/* --- CON TRỎ TÙY CHỈNH --- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+  border-radius:50%;transform:translate(-50%,-50%);
+  display:none; /* Ẩn mặc định, JS sẽ bật lên */
+}
+.cursor-dot{width:6px;height:6px;background:var(--fg)}
+.cursor-ring{
+  width:38px;height:38px;border:1px solid rgba(245,245,242,.55);
+  transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s;
+  mix-blend-mode:difference;
+}
+.cursor-ring.is-hover{width:72px;height:72px;background:#fff;border-color:#fff}
+
+/* Hiệu ứng hiện lên */
+[data-reveal]{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* Header */
+header{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;background:rgba(32,27,22,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.back-link{display:flex;align-items:center;gap:.75rem;font-family:var(--font-mono);font-size:.75rem;letter-spacing:.16em;transition:opacity .35s}
+.head-meta{display:flex;gap:2rem;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;color:var(--muted)}
+
+/* Hero */
+.product-hero{padding:8rem 2rem 0}
+.product-hero .meta{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;color:var(--muted);margin-bottom:2rem}
+.product-hero .meta .tag{border:1px solid var(--line);padding:.4em .9em;border-radius:99px;color:var(--fg)}
+.product-hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(2.4rem,10vw,8.5rem);line-height:1.15;letter-spacing:-.02em;text-transform:uppercase;margin-bottom:3rem;margin-top:0}
+.hero-image{width:100%;height:clamp(280px,52vw,600px);background-size:cover;background-position:center;background-color:var(--bg-2);border:1px solid var(--line);position:relative;overflow:hidden}
+.hero-image::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(32,27,22,.7));pointer-events:none}
+.hero-image.art-fallback{background:radial-gradient(circle at 30% 40%,rgba(232,226,213,.16) 0%,transparent 45%),radial-gradient(circle at 70% 60%,rgba(232,226,213,.10) 0%,transparent 40%),var(--bg-2)}
+
+/* Body */
+.product-body{padding:4rem 2rem;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(240px,1fr);gap:clamp(2rem,6vw,5rem);border-top:1px solid var(--line)}
+.product-intro p{font-size:clamp(1rem,1.6vw,1.25rem);line-height:1.85;font-weight:300;max-width:56ch;margin-top:0}
+.product-specs{border-top:1px solid var(--line);margin:0}
+.product-specs > div{display:grid;grid-template-columns:7rem 1fr;gap:1.5rem;padding:1rem 0;border-bottom:1px solid var(--line)}
+.product-specs dt{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.18em;color:var(--muted);align-self:center}
+.product-specs dd{font-weight:300;font-size:.95rem;line-height:1.5;margin:0}
+
+/* Gallery */
+.product-gallery{padding:0 2rem 4rem;display:grid;gap:1rem;grid-template-columns:1fr 1fr}
+.product-gallery .img{aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--bg-2);border:1px solid var(--line)}
+.product-gallery .img.wide{grid-column:1/-1;aspect-ratio:16/9}
+
+/* Section */
+.product-section{padding:4rem 2rem;border-top:1px solid var(--line);max-width:72ch}
+.product-section .kicker{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;color:var(--muted);display:block;margin-bottom:1.5rem}
+.product-section h2{font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,3.4vw,2.6rem);letter-spacing:-.01em;line-height:1.22;margin-bottom:1.5rem;text-transform:uppercase;margin-top:0}
+.product-section p{font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.85;font-weight:300;color:var(--muted);margin-top:0;margin-bottom:1rem}
+
+/* Next Product */
+.next-product{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;padding:clamp(4rem,8vw,7rem) 2rem;border-top:1px solid var(--line);transition:color .4s var(--ease);position:relative;overflow:hidden;color:inherit}
+.next-product::before{content:"";position:absolute;inset:0;background:var(--fg);transform:translateY(101%);transition:transform .55s var(--ease);z-index:0}
+.next-product:hover::before{transform:none}
+.next-product:hover{color:var(--bg)}
+.next-product > *{position:relative;z-index:1}
+.next-product .lbl{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;color:var(--muted);display:block;margin-bottom:1rem;transition:color .4s}
+.next-product:hover .lbl{color:var(--bg);opacity:.7}
+.next-product h3{font-family:var(--font-display);font-weight:800;font-size:clamp(1.8rem,5.5vw,4rem);line-height:1.15;letter-spacing:-.02em;text-transform:uppercase;margin:0}
+.next-product .arr{font-size:clamp(1.8rem,4.5vw,3rem);transition:transform .4s var(--ease)}
+.next-product:hover .arr{transform:translateX(1rem)}
+
+/* Footer & Not found */
+.foot-meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:1.5rem 2rem;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.16em;color:var(--muted);border-top:1px solid var(--line)}
+.not-found{padding:10rem 2rem 6rem;text-align:center;font-family:var(--font-mono);font-size:.75rem;letter-spacing:.2em;color:var(--muted);opacity:1!important;transform:none!important}
+.not-found a{color:var(--fg);border-bottom:1px solid var(--fg);padding-bottom:.2em}
+
+@media(max-width:900px){.product-body{grid-template-columns:1fr}}
+@media(max-width:720px){
+  header{padding:1rem 1.25rem}
+  .product-hero{padding:7rem 1.25rem 0}
+  .product-hero h1{font-size:clamp(1.9rem,10vw,3.6rem)}
+  .product-body{padding:3rem 1.25rem}
+  .product-gallery{padding:0 1.25rem 3rem;grid-template-columns:1fr}
+  .product-gallery .img.wide{aspect-ratio:4/3}
+  .product-section{padding:3rem 1.25rem}
+  .foot-meta{font-size:.55rem;padding:1.25rem}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<header>
+  <a href="../san-pham.html" class="back-link" data-hover><span class="arr">←</span><span>SẢN PHẨM</span></a>
+  <div class="head-meta">
+    <span id="head-project">PROJECT —</span>
+    <span class="hide-m" id="head-year">—</span>
+  </div>
+</header>
+
+<main id="page-main"></main>
+
+<script src="../data/products.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ================================================================
+   1. KHỞI TẠO CON TRỎ CHUỘT (Gộp từ _shared.js)
+   ================================================================ */
+try {
+  const dotEl  = document.querySelector('.cursor-dot');
+  const ringEl = document.querySelector('.cursor-ring');
+  
+  if(dotEl && ringEl && window.matchMedia("(pointer: fine)").matches) {
+    let mx = innerWidth/2, my = innerHeight/2;
+    let rx = mx, ry = my;
+
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dotEl.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    });
+
+    (function loop(){
+      rx += (mx - rx) * .16;
+      ry += (my - ry) * .16;
+      ringEl.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    })();
+
+    document.addEventListener('mouseover', e => {
+      const hoverEl = e.target.closest('[data-hover]');
+      ringEl.classList.toggle('is-hover', !!hoverEl);
+    });
+
+    // Kích hoạt ẩn con trỏ mặc định
+    document.body.classList.add('custom-cursor-active');
+    dotEl.style.display = 'block';
+    ringEl.style.display = 'block';
+  }
+} catch(e) { console.warn('Lỗi con trỏ:', e); }
+
+
+/* ================================================================
+   2. RENDER DỮ LIỆU SẢN PHẨM
+   ================================================================ */
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
+const products = window.NDECOR_PRODUCTS || [];
+const p = products.find(x => x.id === id);
+
+if(!p){
+  document.getElementById('page-main').innerHTML = `
+    <section class="not-found">
+      KHÔNG TÌM THẤY SẢN PHẨM<br><br>
+      <a href="../san-pham.html">← VỀ DANH MỤC SẢN PHẨM</a>
+    </section>`;
+  return;
+}
+
+const getSafeArray = (val, fallback) => {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') return [val];
+  return [fallback || ''];
+};
+const safeImg = (path) => path ? `../${path.replace(/ /g, '%20')}` : '';
+
+const titleArr = getSafeArray(p.titleLines, p.id);
+const titleHtml = titleArr.join('<br>');
+const titleStr = titleArr.join(' ');
+const tagsArr = getSafeArray(p.tags, 'DỰ ÁN');
+const tagsHtml = tagsArr.map(t => `<span class="tag">${t}</span>`).join('');
+
+document.title = titleStr + ' — NDECOR®';
+document.getElementById('head-project').textContent = 'PROJECT ' + (p.num || '001') + ' / ' + String(products.length).padStart(2,'0');
+document.getElementById('head-year').textContent = p.year || '';
+
+const heroStyle = p.image ? `background-image:url('${safeImg(p.image)}')` : '';
+const heroClass = p.image ? 'hero-image' : 'hero-image art-fallback';
+const locYear = [p.location ? p.location.toUpperCase() : '', p.year].filter(Boolean).join(' — ');
+
+const specRows = [
+  ['VỊ TRÍ', p.location], ['DIỆN TÍCH', p.area],
+  ['NĂM', p.year], ['VẬT LIỆU', p.materials], ['THỜI GIAN', p.duration]
+].filter(([_,v]) => v);
+const specsHtml = specRows.map(([label,val]) => `<div><dt>${label}</dt><dd>${val}</dd></div>`).join('');
+
+const secs = p.sections || [];
+const gal = p.gallery || [];
+
+const galleryHtml = gal.length ? `
+  <section class="product-gallery" data-reveal>
+    ${gal.map((img, idx) => `
+      <div class="img ${idx === 0 && gal.length >= 3 ? 'wide' : ''}"
+           style="background-image:url('${safeImg(img)}')"></div>
+    `).join('')}
+  </section>` : '';
+
+let sectionsHtml = '';
+let galleryRendered = false;
+
+secs.forEach((s, i) => {
+  sectionsHtml += `
+    <section class="product-section" data-reveal>
+      <span class="kicker">${s.kicker || ''}</span>
+      <h2>${s.title || ''}</h2>
+      ${(s.body||[]).map(t => `<p>${t}</p>`).join('')}
+    </section>`;
+  if (i === 0 && galleryHtml) {
+    sectionsHtml += galleryHtml;
+    galleryRendered = true;
+  }
+});
+if (!galleryRendered) sectionsHtml += galleryHtml;
+
+const idx = products.findIndex(x => x.id === p.id);
+const next = products[(idx + 1) % products.length];
+const nextHtml = next ? `
+  <a href="chi-tiet.html?id=${encodeURIComponent(next.id)}" class="next-product" data-hover data-reveal>
+    <div>
+      <span class="lbl">TIẾP THEO — ${next.num || ''} / ${String(products.length).padStart(2,'0')}</span>
+      <h3>${getSafeArray(next.titleLines, next.id).join('<br>')}</h3>
+    </div>
+    <span class="arr">→</span>
+  </a>` : '';
+
+document.getElementById('page-main').innerHTML = `
+  <section class="product-hero">
+    <div class="meta" data-reveal>
+      ${tagsHtml}
+      <span>${locYear}</span>
+    </div>
+    <h1 data-reveal>${titleHtml}</h1>
+    <div class="${heroClass}" style="${heroStyle}" data-reveal></div>
+  </section>
+  <section class="product-body">
+    ${p.intro ? `<div class="product-intro" data-reveal><p>${p.intro}</p></div>` : '<div></div>'}
+    <dl class="product-specs" data-reveal>${specsHtml}</dl>
+  </section>
+  ${sectionsHtml}
+  ${nextHtml}
+  <footer class="foot-meta">
+    <span>© 2026 NDECOR® STUDIO</span>
+    <span>PHƯỜNG BÌNH PHƯỚC, TỈNH ĐỒNG NAI</span>
+    <span>MADE WITH OBSESSION</span>
+  </footer>
+`;
+
+/* ================================================================
+   3. HIỆU ỨNG HIỆN LÊN (Gộp từ _shared.js)
+   ================================================================ */
+const reveals = document.querySelectorAll('[data-reveal]');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      io.unobserve(en.target);
+    }
+  });
+}, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+
+reveals.forEach(el => io.observe(el));
+
+// Lưới an toàn: Sau 0.5s tự động hiện để tránh bị trắng trang nếu Observer lỗi
+setTimeout(() => {
+  document.querySelectorAll('[data-reveal]:not(.in)').forEach(el => el.classList.add('in'));
+}, 500);
+
+})();
+</script>
+</body>
+</html>
