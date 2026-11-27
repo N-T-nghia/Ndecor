@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dịch vụ — NDECOR®</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231E1715'/><rect x='8' y='8' width='16' height='16' fill='%23E8E2D5'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#201b16;
+  --bg-2:#1a1611;
+  --fg:#E8E2D5;
+  --muted:#a89f93;
+  --line:#2e2822;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-display:'Be Vietnam Pro','Segoe UI',Arial,sans-serif;
+  --font-body:'Be Vietnam Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:'JetBrains Mono','Segoe UI Mono','SF Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+html,body{height:100%}
+body{
+  background-color:var(--bg);color:var(--fg);font-family:var(--font-body);
+  overflow-x:hidden;overflow-y:auto;cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(55vw 45vw at 82% -8%, rgba(158,124,86,.14), transparent 62%),
+    radial-gradient(45vw 40vw at 2% 108%, rgba(84,116,108,.10), transparent 60%);
+}
+::selection{background:var(--fg);color:var(--bg)}
+a{color:inherit;text-decoration:none;cursor:none}
+button{background:none;border:none;color:inherit;font:inherit;cursor:none}
+:focus{outline:none}
+:focus-visible{outline:2px dashed var(--fg);outline-offset:4px}
+
+/* ---------- GRAIN ---------- */
+.grain{
+  position:fixed;inset:-50%;width:200%;height:200%;
+  pointer-events:none;z-index:200;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-10%)}
+  20%{transform:translate(-15%,5%)}30%{transform:translate(7%,-25%)}
+  40%{transform:translate(-5%,25%)}50%{transform:translate(-15%,10%)}
+  60%{transform:translate(15%,0%)}70%{transform:translate(0%,15%)}
+  80%{transform:translate(3%,35%)}90%{transform:translate(-10%,10%)}
+}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:1000;
+  border-radius:50%;transform:translate(-50%,-50%);
+}
+.cursor-dot{width:6px;height:6px;background:var(--fg)}
+.cursor-ring{
+  width:38px;height:38px;border:1px solid rgba(245,245,242,.55);
+  transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s;
+  mix-blend-mode:difference;
+}
+.cursor-ring.is-hover{width:72px;height:72px;background:#fff;border-color:#fff}
+@media (pointer:coarse){
+  body,button,a,.svc-row,.nav-dots a{cursor:pointer}
+  .cursor-dot,.cursor-ring{display:none}
+}
+
+/* ---------- HEADER ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.25rem 2rem;
+  background:rgba(32,27,22,.82);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.back-link{
+  display:flex;align-items:center;gap:.75rem;
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.16em;
+  transition:opacity .35s;
+}
+.back-link:hover{opacity:.7}
+.back-link .arr{transition:transform .35s var(--ease)}
+.back-link:hover .arr{transform:translateX(-6px)}
+.head-meta{display:flex;gap:2rem;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;color:var(--muted)}
+.head-meta b{color:var(--fg);font-weight:400}
+@media(max-width:720px){.head-meta .hide-m{display:none}}
+
+/* ---------- NAV DOTS ---------- */
+.nav-dots{
+  position:fixed;right:1.4rem;top:50%;transform:translateY(-50%);
+  z-index:100;display:flex;flex-direction:column;gap:.5rem;
+}
+.nav-dots a{
+  width:44px;height:24px;display:flex;align-items:center;justify-content:flex-end;gap:.5rem;
+}
+.nav-dots .lbl{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.15em;color:var(--muted);
+  opacity:0;transform:translateX(6px);transition:.35s var(--ease);white-space:nowrap;
+}
+.nav-dots a:hover .lbl,.nav-dots a.active .lbl{opacity:1;transform:none}
+.nav-dots a.active .lbl{color:var(--fg)}
+.nav-dots .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.35s var(--ease);flex:none}
+.nav-dots a.active .dot{background:var(--fg);transform:scale(1.35)}
+@media(max-width:720px){.nav-dots .lbl{display:none}}
+
+/* ---------- REVEAL ---------- */
+[data-reveal]{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* ---------- MAIN ---------- */
+main{position:relative;z-index:1}
+section[id]{scroll-margin-top:6rem}
+
+/* ---------- HERO ---------- */
+.svc-hero{
+  min-height:100vh;padding:9rem 2rem 4rem;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+.svc-hero .kicker{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);margin-bottom:2rem;
+}
+.svc-hero .kicker b{color:var(--fg);font-weight:400}
+.svc-hero h1{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(4rem,16vw,14rem);
+  line-height:1.15;letter-spacing:-.03em;text-transform:uppercase;
+  margin-bottom:2.5rem;
+}
+.svc-hero .svc-intro{
+  font-size:clamp(1rem,1.6vw,1.25rem);
+  line-height:1.7;color:var(--muted);font-weight:300;
+  max-width:52ch;
+}
+.svc-hero .scroll-hint{
+  position:absolute;bottom:2rem;left:2rem;
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);display:flex;align-items:center;gap:.75rem;
+}
+.scroll-hint .pulse{width:7px;height:7px;border-radius:50%;background:var(--fg);animation:pulse 1.6s ease infinite}
+@keyframes pulse{50%{opacity:.15;transform:scale(.6)}}
+
+/* ---------- SERVICE DETAIL ---------- */
+.svc-detail{
+  display:grid;
+  grid-template-columns:minmax(280px,1fr) minmax(320px,1.4fr);
+  gap:clamp(2rem,6vw,6rem);
+  padding:clamp(4rem,8vw,7rem) 2rem;
+  border-top:1px solid var(--line);
+  position:relative;
+}
+.svc-detail::before{
+  content:"";position:absolute;top:0;left:2rem;
+  width:3rem;height:1px;background:var(--fg);transform:translateY(-1px);
+}
+.svc-aside{
+  position:sticky;top:7rem;align-self:start;height:fit-content;
+}
+.svc-aside .svc-num{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.2em;
+  color:var(--muted);display:block;margin-bottom:1.5rem;
+}
+.svc-aside .svc-num b{color:var(--fg);font-weight:400}
+.svc-aside h2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2rem,4.6vw,3.6rem);
+  line-height:1.2;letter-spacing:-.02em;text-transform:uppercase;
+  margin-bottom:2.5rem;
+}
+.svc-meta{
+  display:grid;grid-template-columns:auto 1fr;gap:.75rem 1.5rem;
+  font-size:.875rem;margin-bottom:2.5rem;
+}
+.svc-meta dt{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.18em;
+  color:var(--muted);align-self:center;
+}
+.svc-meta dd{color:var(--fg);font-weight:300}
+.svc-cta{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.18em;
+  border:1px solid var(--line);padding:.9rem 1.4rem;border-radius:99px;
+  transition:background .35s var(--ease),color .35s,border-color .35s;
+}
+.svc-cta:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.svc-cta .arr{transition:transform .35s var(--ease)}
+.svc-cta:hover .arr{transform:translateX(6px)}
+
+.svc-body{
+  padding-top:.5rem;
+}
+.svc-desc{
+  font-size:clamp(1rem,1.6vw,1.2rem);
+  line-height:1.85;color:var(--fg);font-weight:300;
+  margin-bottom:3rem;max-width:54ch;
+}
+.svc-deliv-head{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);margin-bottom:1.5rem;
+}
+.svc-deliv{
+  list-style:none;border-top:1px solid var(--line);
+}
+.svc-deliv li{
+  display:grid;grid-template-columns:3rem 1fr;
+  gap:1.5rem;align-items:baseline;
+  padding:1rem 0;border-bottom:1px solid var(--line);
+  font-size:.95rem;line-height:1.5;
+  transition:color .35s;
+}
+.svc-deliv li:hover{color:var(--fg)}
+.svc-deliv li span:first-child{
+  font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.16em;
+  color:var(--muted);font-weight:400;
+}
+.svc-related{
+  margin-top:2.5rem;display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;flex-wrap:wrap;
+}
+.svc-related .lbl{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);
+}
+.svc-related a{
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.16em;
+  color:var(--fg);display:inline-flex;align-items:center;gap:.5rem;
+  border-bottom:1px solid var(--line);padding-bottom:.3rem;
+  transition:border-color .35s,color .35s;
+}
+.svc-related a:hover{border-color:var(--fg)}
+
+@media(max-width:900px){
+  .svc-detail{grid-template-columns:1fr;padding:4rem 1.5rem}
+  .svc-aside{position:static}
+  .svc-detail::before{left:1.5rem}
+}
+
+/* ---------- PROCESS ---------- */
+.process{
+  padding:clamp(5rem,10vw,8rem) 2rem;
+  border-top:1px solid var(--line);
+}
+.process-head{
+  display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.4fr);
+  gap:clamp(2rem,6vw,6rem);
+  margin-bottom:4rem;
+}
+.process-head .kicker{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);margin-bottom:1.5rem;
+}
+.process-head h2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2rem,4.6vw,3.6rem);
+  line-height:1.2;letter-spacing:-.02em;text-transform:uppercase;
+}
+.process-list{
+  list-style:none;grid-column:1 / -1;
+  display:flex;flex-direction:column;
+}
+.process-item{
+  display:grid;
+  grid-template-columns:6rem 1fr auto;
+  gap:2rem;align-items:baseline;
+  padding:2.5rem 0;border-top:1px solid var(--line);
+}
+.process-item:last-child{border-bottom:1px solid var(--line)}
+.process-item .p-num{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2rem,3.5vw,3rem);line-height:1;color:var(--fg);
+}
+.process-item .p-content h3{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.2rem,2vw,1.6rem);
+  letter-spacing:-.01em;line-height:1.3;margin-bottom:.75rem;
+}
+.process-item .p-content p{
+  color:var(--muted);font-size:.95rem;line-height:1.7;font-weight:300;
+  max-width:52ch;
+}
+.process-item .p-time{
+  font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.18em;
+  color:var(--muted);white-space:nowrap;
+}
+@media(max-width:900px){
+  .process{padding:4rem 1.5rem}
+  .process-head{grid-template-columns:1fr;margin-bottom:3rem}
+  .process-item{grid-template-columns:4rem 1fr;gap:1.5rem}
+  .process-item .p-time{grid-column:2;font-size:.6875rem;margin-top:.5rem}
+}
+
+/* ---------- CTA ---------- */
+.svc-cta-section{
+  padding:clamp(6rem,12vw,10rem) 2rem clamp(4rem,8vw,6rem);
+  border-top:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:flex-start;
+}
+.svc-cta-section .kicker{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.22em;
+  color:var(--muted);margin-bottom:2rem;
+}
+.svc-cta-section h2{
+  font-family:var(--font-display);font-weight:800;
+  font-size:clamp(2.2rem,7vw,6.5rem);
+  line-height:1.15;letter-spacing:-.02em;text-transform:uppercase;
+  margin-bottom:3rem;
+}
+.mail-big{
+  display:block;width:100%;text-align:center;
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.1rem,4.6vw,3.4rem);letter-spacing:.01em;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:1.5rem 1rem;position:relative;overflow:hidden;
+  margin-bottom:3rem;
+}
+.mail-big .fill{position:absolute;inset:0;background:var(--fg);transform:translateY(101%);transition:transform .55s var(--ease)}
+.mail-big:hover .fill{transform:none}
+.mail-big .inner{position:relative;z-index:1;transition:color .4s}
+.mail-big:hover .inner{color:var(--bg)}
+.back-home{
+  display:inline-flex;align-items:center;gap:.75rem;
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.18em;
+  color:var(--muted);transition:color .35s;
+}
+.back-home:hover{color:var(--fg)}
+.back-home .arr{transition:transform .35s var(--ease)}
+.back-home:hover .arr{transform:translateX(-6px)}
+
+/* ---------- FOOTER ---------- */
+.foot-meta{
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem;
+  padding:1.5rem 2rem;
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.16em;color:var(--muted);
+  border-top:1px solid var(--line);
+}
+
+@media(max-width:720px){
+  header{padding:1rem 1.25rem}
+  .svc-hero{padding:7rem 1.25rem 3rem}
+  .svc-hero h1{font-size:clamp(3rem,14vw,6rem)}
+  .nav-dots{right:.75rem}
+  .nav-dots a{height:20px}
+  .foot-meta{font-size:.55rem;padding:1.25rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  [data-reveal]{opacity:1!important;transform:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<header>
+  <a href="ndecor.html" class="back-link" data-hover>
+    <span class="arr">←</span>
+    <span>NDECOR<sup>®</sup></span>
+  </a>
+  <div class="head-meta">
+    <span>DỊCH VỤ — SERVICES</span>
+    <span class="hide-m">07 MỤC</span>
+  </div>
+</header>
+
+<nav class="nav-dots" aria-label="Service sections">
+  <a href="#svc-1" data-hover aria-label="Ngoại thất"><span class="lbl">NGOẠI THẤT</span><span class="dot"></span></a>
+  <a href="#svc-2" data-hover aria-label="Nội thất"><span class="lbl">NỘI THẤT</span><span class="dot"></span></a>
+  <a href="#svc-3" data-hover aria-label="Cà phê"><span class="lbl">CÀ PHÊ</span><span class="dot"></span></a>
+  <a href="#svc-4" data-hover aria-label="Nhà hàng"><span class="lbl">NHÀ HÀNG</span><span class="dot"></span></a>
+  <a href="#process" data-hover aria-label="Quy trình"><span class="lbl">QUY TRÌNH</span><span class="dot"></span></a>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <section class="svc-hero" id="top">
+    <span class="kicker" data-reveal><b>07</b> — CAPABILITIES / DỊCH VỤ</span>
+    <h1 data-reveal>DỊCH VỤ</h1>
+    <p class="svc-intro" data-reveal>
+      Bảy hướng tiếp cận — một triết lý duy nhất. Chúng tôi không bán bản vẽ, chúng tôi dựng không gian sống
+      từ vật liệu thô, ánh sáng tự nhiên và câu chuyện của người ở.
+    </p>
+    <span class="scroll-hint" data-reveal><span class="pulse"></span>CUỘN XUỐNG ĐỂ XEM TỪNG DỊCH VỤ</span>
+  </section>
+
+  <!-- 01 NGOẠI THẤT -->
+  <section class="svc-detail" id="svc-1">
+    <aside class="svc-aside" data-reveal>
+      <span class="svc-num"><b>/01</b> — EXTERIOR</span>
+      <h2>Thiết kế<br>Ngoại thất</h2>
+      <dl class="svc-meta">
+        <dt>PHẠM VI</dt><dd>Vườn · Mặt tiền · Cảnh quan</dd>
+        <dt>THỜI GIAN</dt><dd>6–10 tuần</dd>
+        <dt>PHÙ HỢP</dt><dd>Nhà ở · Homestay · Villa</dd>
+      </dl>
+      <a href="https://zalo.me/0373681667" target="_blank" rel="noopener" class="svc-cta" data-hover>
+        <span>ĐẶT TƯ VẤN</span><span class="arr">→</span>
+      </a>
+    </aside>
+    <div class="svc-body" data-reveal>
+      <p class="svc-desc">
+        Không gian ngoài trời hòa vào cảnh quan Phường Bình Phước, tỉnh Đồng Nai — vườn thiền, mặt tiền tối giản, sân trong đá ong.
+        Mỗi đường nét theo địa hình tự nhiên và giữ lại cây cũ, mảng rêu, vết nứt có sẵn. Chúng tôi không
+        xóa dấu thời gian — chúng tôi thiết kế để thời gian đi tiếp.
+      </p>
+      <h3 class="svc-deliv-head">HẠNG MỤC BÀN GIAO</h3>
+      <ul class="svc-deliv">
+        <li><span>01</span><span>Khảo sát hiện trạng &amp; đo đạc địa hình</span></li>
+        <li><span>02</span><span>Concept 2D, moodboard vật liệu</span></li>
+        <li><span>03</span><span>Mô hình 3D &amp; bản vẽ kỹ thuật</span></li>
+        <li><span>04</span><span>Hồ sơ thi công chi tiết</span></li>
+        <li><span>05</span><span>Giám sát thi công &amp; nghiệm thu</span></li>
+      </ul>
+      <div class="svc-related">
+        <span class="lbl">DỰ ÁN LIÊN QUAN</span>
+        <a href="ndecor.html#1" data-hover>GỐC TOÀN CẢNH →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 NỘI THẤT -->
+  <section class="svc-detail" id="svc-2">
+    <aside class="svc-aside" data-reveal>
+      <span class="svc-num"><b>/02</b> — INTERIOR</span>
+      <h2>Thiết kế<br>Nội thất</h2>
+      <dl class="svc-meta">
+        <dt>PHẠM VI</dt><dd>Nhà ở · Villa · Homestay</dd>
+        <dt>THỜI GIAN</dt><dd>8–12 tuần</dd>
+        <dt>DIỆN TÍCH</dt><dd>60–400 m²</dd>
+      </dl>
+      <a href="https://zalo.me/0373681667" target="_blank" rel="noopener" class="svc-cta" data-hover>
+        <span>ĐẶT TƯ VẤN</span><span class="arr">→</span>
+      </a>
+    </aside>
+    <div class="svc-body" data-reveal>
+      <p class="svc-desc">
+        Wabi-Sabi và Japandi gặp nhau trong từng mảng tường, từng thớ gỗ. Ánh sáng tự nhiên là vật liệu
+        chính — chúng tôi thiết kế để nắng xuyên qua kẽ tre lúc 4 giờ chiều, đổ bóng dài trên sàn đá ong.
+        Mọi chi tiết đồ gỗ đều làm trực tiếp với xưởng mộc, không qua trung gian.
+      </p>
+      <h3 class="svc-deliv-head">HẠNG MỤC BÀN GIAO</h3>
+      <ul class="svc-deliv">
+        <li><span>01</span><span>Layout &amp; nghiên cứu công năng</span></li>
+        <li><span>02</span><span>Concept vật liệu (gỗ tái chế · đá ong · tre)</span></li>
+        <li><span>03</span><span>Bản vẽ 3D &amp; kịch bản ánh sáng</span></li>
+        <li><span>04</span><span>Chi tiết thi công đồ gỗ nội thất</span></li>
+        <li><span>05</span><span>Danh mục FF&amp;E &amp; hỗ trợ mua sắm</span></li>
+      </ul>
+      <div class="svc-related">
+        <span class="lbl">DỰ ÁN LIÊN QUAN</span>
+        <a href="ndecor.html#1" data-hover>INDOCHINE HALLWAY →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 CÀ PHÊ -->
+  <section class="svc-detail" id="svc-3">
+    <aside class="svc-aside" data-reveal>
+      <span class="svc-num"><b>/03</b> — F&amp;B COFFEE</span>
+      <h2>F&amp;B Trọn gói<br>Cà phê</h2>
+      <dl class="svc-meta">
+        <dt>PHẠM VI</dt><dd>Specialty · Tea house · Bakery</dd>
+        <dt>THỜI GIAN</dt><dd>10–14 tuần</dd>
+        <dt>DIỆN TÍCH</dt><dd>40–200 m²</dd>
+      </dl>
+      <a href="https://zalo.me/0373681667" target="_blank" rel="noopener" class="svc-cta" data-hover>
+        <span>ĐẶT TƯ VẤN</span><span class="arr">→</span>
+      </a>
+    </aside>
+    <div class="svc-body" data-reveal>
+      <p class="svc-desc">
+        Từ concept đến ly cà phê đầu tiên. Chúng tôi làm cả quầy bar, hệ thống pha chế, bảng hiệu và không
+        gian ngồi — một concept thống nhất từ cổng vào đến menu, từ ánh sáng trên bàn đến logo trên ly giấy.
+        Bàn giao là lúc quán mở cửa, không phải lúc bản vẽ xong.
+      </p>
+      <h3 class="svc-deliv-head">HẠNG MỤC BÀN GIAO</h3>
+      <ul class="svc-deliv">
+        <li><span>01</span><span>Concept &amp; brand identity</span></li>
+        <li><span>02</span><span>Thiết kế không gian &amp; quầy bar</span></li>
+        <li><span>03</span><span>Hệ thống pha chế &amp; tủ trưng bày</span></li>
+        <li><span>04</span><span>Menu · bao bì · signage</span></li>
+        <li><span>05</span><span>Setup &amp; hỗ trợ khai trương</span></li>
+      </ul>
+      <div class="svc-related">
+        <span class="lbl">DỰ ÁN LIÊN QUAN</span>
+        <a href="ndecor.html#1" data-hover>TÂY BẮC COFFEE →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 NHÀ HÀNG -->
+  <section class="svc-detail" id="svc-4">
+    <aside class="svc-aside" data-reveal>
+      <span class="svc-num"><b>/04</b> — F&amp;B RESTAURANT</span>
+      <h2>F&amp;B Trọn gói<br>Nhà hàng</h2>
+      <dl class="svc-meta">
+        <dt>PHẠM VI</dt><dd>Fine dining · Bistro · Nhà hàng bản địa</dd>
+        <dt>THỜI GIAN</dt><dd>12–18 tuần</dd>
+        <dt>DIỆN TÍCH</dt><dd>80–500 m²</dd>
+      </dl>
+      <a href="https://zalo.me/0373681667" target="_blank" rel="noopener" class="svc-cta" data-hover>
+        <span>ĐẶT TƯ VẤN</span><span class="arr">→</span>
+      </a>
+    </aside>
+    <div class="svc-body" data-reveal>
+      <p class="svc-desc">
+        Bếp mở, trải nghiệm tuần tự — chúng tôi thiết kế hành trình ẩm thực bằng không gian, từ ánh sáng
+        bàn đầu đến bàn cuối. Mỗi ghế ngồi có góc nhìn riêng vào bếp, mỗi món có kịch bản ánh sáng riêng.
+        Không gian là phần thứ hai của món ăn.
+      </p>
+      <h3 class="svc-deliv-head">HẠNG MỤC BÀN GIAO</h3>
+      <ul class="svc-deliv">
+        <li><span>01</span><span>Concept ẩm thực × không gian</span></li>
+        <li><span>02</span><span>Layout bếp mở &amp; flow phục vụ</span></li>
+        <li><span>03</span><span>Ánh sáng theo món &amp; thời điểm</span></li>
+        <li><span>04</span><span>Đồ gỗ · bàn ghế · bát đĩa</span></li>
+        <li><span>05</span><span>Đào tạo trải nghiệm cho nhân viên</span></li>
+      </ul>
+      <div class="svc-related">
+        <span class="lbl">DỰ ÁN LIÊN QUAN</span>
+        <a href="ndecor.html#1" data-hover>GỐC CÀ PHÊ GỖ →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="process">
+    <div class="process-head">
+      <div data-reveal>
+        <span class="kicker"><b>05</b> — WORKFLOW / QUY TRÌNH</span>
+        <h2>Từ ý tưởng<br>đến bàn giao</h2>
+      </div>
+      <ol class="process-list" data-reveal>
+        <li class="process-item">
+          <span class="p-num">01</span>
+          <div class="p-content">
+            <h3>Brief</h3>
+            <p>Gặp gỡ, nghe câu chuyện, khảo sát địa hình và ánh sáng tự nhiên. Xác định ngân sách và thời điểm khai trương.</p>
+          </div>
+          <span class="p-time">1–2 tuần</span>
+        </li>
+        <li class="process-item">
+          <span class="p-num">02</span>
+          <div class="p-content">
+            <h3>Concept</h3>
+            <p>Moodboard, định hướng vật liệu, phác thảo ý tưởng không gian. Chốt triết lý thiết kế trước khi vào bản vẽ.</p>
+          </div>
+          <span class="p-time">2–3 tuần</span>
+        </li>
+        <li class="process-item">
+          <span class="p-num">03</span>
+          <div class="p-content">
+            <h3>Design</h3>
+            <p>Mô hình 3D, bản vẽ kỹ thuật, danh mục vật liệu &amp; FF&amp;E. Làm việc trực tiếp với xưởng mộc và thợ đá.</p>
+          </div>
+          <span class="p-time">3–6 tuần</span>
+        </li>
+        <li class="process-item">
+          <span class="p-num">04</span>
+          <div class="p-content">
+            <h3>Build</h3>
+            <p>Thi công, may đo, giám sát tại công trình. Điều chỉnh tại chỗ khi vật liệu thực tế khác bản vẽ.</p>
+          </div>
+          <span class="p-time">4–12 tuần</span>
+        </li>
+        <li class="process-item">
+          <span class="p-num">05</span>
+          <div class="p-content">
+            <h3>Handover</h3>
+            <p>Bàn giao, styling chi tiết, chụp ảnh tư liệu. Hỗ trợ 3 tháng sau bàn giao cho các điều chỉnh nhỏ.</p>
+          </div>
+          <span class="p-time">1 tuần</span>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="svc-cta-section">
+    <span class="kicker" data-reveal>NEXT — BẮT ĐẦU</span>
+    <h2 data-reveal>Hãy cùng<br>tạo nên<br>không gian</h2>
+    <a class="mail-big" href="https://zalo.me/0373681667" target="_blank" rel="noopener" data-hover data-reveal>
+      <span class="fill" aria-hidden="true"></span>
+      <span class="inner">Zalo: 0373681667 ↗</span>
+    </a>
+    <a href="ndecor.html" class="back-home" data-hover data-reveal>
+      <span class="arr">←</span><span>VỀ TRANG CHỦ</span>
+    </a>
+  </section>
+
+  <footer class="foot-meta">
+    <span>© 2026 NDECOR® STUDIO</span>
+    <span>PHƯỜNG BÌNH PHƯỚC, TỈNH ĐỒNG NAI</span>
+    <span>MADE WITH OBSESSION</span>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+"use strict";
+const $=(s,c)=>(c||document).querySelector(s);
+const $$=(s,c)=>Array.from((c||document).querySelectorAll(s));
+
+/* ---------- cursor ---------- */
+const dotEl=$('.cursor-dot'),ringEl=$('.cursor-ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+window.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dotEl.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+});
+(function loop(){
+  rx+=(mx-rx)*.16;ry+=(my-ry)*.16;
+  ringEl.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(loop);
+})();
+document.addEventListener('mouseover',e=>{
+  const h=e.target.closest('[data-hover]');
+  ringEl.classList.toggle('is-hover',!!h);
+});
+
+/* ---------- reveal on scroll ---------- */
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reduce){
+  $$('[data-reveal]').forEach(el=>el.classList.add('in'));
+} else {
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  $$('[data-reveal]').forEach(el=>io.observe(el));
+}
+
+/* ---------- nav dots scroll-aware ---------- */
+const sections=$$('section[id]');
+const dots=$$('.nav-dots a');
+function updateDots(){
+  let curId=sections[0]?.id || '';
+  const offset=innerHeight*0.35;
+  sections.forEach(s=>{
+    if(s.getBoundingClientRect().top <= offset) curId=s.id;
+  });
+  dots.forEach(d=>{
+    d.classList.toggle('active',d.getAttribute('href')==='#'+curId);
+  });
+}
+window.addEventListener('scroll',updateDots,{passive:true});
+window.addEventListener('resize',updateDots);
+updateDots();
+
+/* ---------- anchor smooth scroll (with header offset already handled by scroll-margin-top) ---------- */
+dots.forEach(d=>{
+  d.addEventListener('click',e=>{
+    const href=d.getAttribute('href');
+    if(!href||!href.startsWith('#'))return;
+    e.preventDefault();
+    const el=document.querySelector(href);
+    if(el) el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+  });
+});
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDECOR® — Wabi-Sabi Design Studio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%231E1715'/><rect x='8' y='8' width='16' height='16' fill='%23E8E2D5'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#201b16;
+  --bg-2:#1a1611;
+  --fg:#E8E2D5;
+  --muted:#a89f93;
+  --line:#2e2822;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --font-display:'Be Vietnam Pro','Segoe UI',Arial,sans-serif;
+  --font-body:'Be Vietnam Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:'JetBrains Mono','Segoe UI Mono','SF Mono',Consolas,monospace;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background-color:var(--bg);
+  color:var(--fg);
+  font-family:var(--font-body);
+  overflow:hidden;
+  cursor:none;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(55vw 45vw at 82% -8%, rgba(158,124,86,.14), transparent 62%),
+    radial-gradient(45vw 40vw at 2% 108%, rgba(84,116,108,.10), transparent 60%);
+}
+::selection{background:var(--fg);color:var(--bg)}
+a{color:inherit;text-decoration:none}
+button{background:none;border:none;color:inherit;font:inherit;cursor:none}
+:focus{outline:none}
+:focus-visible{outline:2px dashed var(--fg);outline-offset:4px}
+
+/* ---------- INTRO ---------- */
+#nfx{
+  position:fixed;inset:0;z-index:999;background:#fafafa;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  transition:opacity .55s var(--ease);
+}
+#nfx.cut{opacity:0;pointer-events:none}
+.nfx-glow{
+  position:absolute;width:50vmax;height:50vmax;border-radius:50%;
+  background:radial-gradient(circle,rgba(42,127,159,.15),transparent 50%);
+  filter:blur(30px);animation:nfxGlow 2.5s ease-out forwards;opacity:.8;z-index:1;
+}
+.nfx-word{
+  position:relative;display:flex;
+  font-family:'Inter',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:800;font-size:clamp(3.5rem,16vw,11rem);
+  letter-spacing:.08em;color:#2A7F9F;
+  transform:scale(.92);animation:nfxIn 2.2s cubic-bezier(.16,1,.3,1) forwards;z-index:2;
+}
+.nfx-word .ch{
+  opacity:0;transform:translateY(.35em);animation:nfxCh .7s cubic-bezier(.16,1,.3,1) forwards;
+  animation-delay:calc(var(--i)*.09s + .2s);position:relative;z-index:3;
+}
+@keyframes nfxIn{to{transform:scale(1.05)}}
+@keyframes nfxCh{to{opacity:1;transform:none}}
+@keyframes nfxGlow{0%{transform:scale(.4);opacity:0}45%{opacity:1}100%{transform:scale(1);opacity:.85}}
+
+/* ---------- GRAIN ---------- */
+.grain{
+  position:fixed;inset:-50%;width:200%;height:200%;
+  pointer-events:none;z-index:200;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)}10%{transform:translate(-5%,-10%)}
+  20%{transform:translate(-15%,5%)}30%{transform:translate(7%,-25%)}
+  40%{transform:translate(-5%,25%)}50%{transform:translate(-15%,10%)}
+  60%{transform:translate(15%,0%)}70%{transform:translate(0%,15%)}
+  80%{transform:translate(3%,35%)}90%{transform:translate(-10%,10%)}
+}
+
+/* ---------- CURSOR ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:1000;
+  border-radius:50%;transform:translate(-50%,-50%);
+}
+.cursor-dot{width:6px;height:6px;background:var(--fg)}
+.cursor-ring{
+  width:38px;height:38px;border:1px solid rgba(245,245,242,.55);
+  transition:width .35s var(--ease),height .35s var(--ease),background .35s,border-color .35s;
+  mix-blend-mode:difference;
+}
+.cursor-ring.is-hover{width:72px;height:72px;background:#fff;border-color:#fff}
+
+/* ---------- HEADER ---------- */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.5rem 2rem;mix-blend-mode:difference;
+}
+.logo{font-family:var(--font-display);font-weight:800;font-size:1.05rem;letter-spacing:.02em}
+.logo sup{font-size:.5em;font-weight:500}
+.head-meta{display:flex;gap:2rem;align-items:center;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;color:var(--muted)}
+.head-meta b{color:var(--fg);font-weight:400}
+.head-link{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;
+  color:var(--muted);transition:color .35s;cursor:none;
+  border-bottom:1px solid transparent;
+}
+.head-link:hover{color:var(--fg);border-bottom-color:var(--fg)}
+
+/* language switcher */
+.lang-switcher{
+  display:flex;align-items:center;gap:.25rem;
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;
+}
+.lang-btn{
+  color:var(--muted);transition:color .3s;padding:.15rem .05rem;
+  background:none;border:none;cursor:none;
+  font-family:inherit;font-size:inherit;letter-spacing:inherit;
+  position:relative;
+}
+.lang-btn:hover{color:var(--fg)}
+.lang-btn.active{color:var(--fg)}
+.lang-btn.active::after{
+  content:"";position:absolute;left:0;right:0;bottom:-3px;
+  height:1px;background:var(--fg);
+}
+.lang-sep{color:var(--muted);opacity:.35;font-size:.85em}
+@media(max-width:720px){.head-meta .hide-m{display:none}}
+
+/* ---------- NAV DOTS ---------- */
+.nav-dots{
+  position:fixed;right:1.4rem;top:50%;transform:translateY(-50%);
+  z-index:100;display:flex;flex-direction:column;gap:.5rem;
+}
+.nav-dots button{
+  width:44px;height:24px;display:flex;align-items:center;justify-content:flex-end;gap:.5rem;cursor:none;
+}
+.nav-dots .lbl{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.15em;color:var(--muted);
+  opacity:0;transform:translateX(6px);transition:.35s var(--ease);white-space:nowrap;
+}
+.nav-dots button:hover .lbl,.nav-dots button.active .lbl{opacity:1;transform:none}
+.nav-dots button.active .lbl{color:var(--fg)}
+.nav-dots .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.35s var(--ease);flex:none}
+.nav-dots button.active .dot{background:var(--fg);transform:scale(1.35)}
+@media(max-width:720px){.nav-dots .lbl{display:none}}
+
+/* ---------- SCENE INDEX ---------- */
+.scene-index{
+  position:fixed;left:2rem;bottom:1.6rem;z-index:100;
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.15em;color:var(--muted);
+}
+.scene-index b{color:var(--fg);font-weight:400;font-size:1rem}
+.scene-index .bar{display:block;width:120px;height:1px;background:var(--line);margin-top:.5rem;position:relative;overflow:hidden}
+.scene-index .bar i{position:absolute;top:0;left:0;height:100%;width:20%;background:var(--fg);transition:transform .8s var(--ease)}
+
+/* ---------- SCENES ---------- */
+main{position:fixed;inset:0;z-index:1}
+.scene{
+  position:absolute;inset:0;padding:6rem 2rem 4.5rem;
+  visibility:hidden;opacity:0;pointer-events:none;
+}
+.scene.active{visibility:visible;opacity:1;pointer-events:auto}
+.scene-inner{height:100%;display:flex;flex-direction:column}
+
+[data-reveal]{opacity:0;transform:translateY(34px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.scene.active [data-reveal]{opacity:1;transform:none}
+.scene.active [data-reveal]:nth-child(1){transition-delay:.12s}
+.scene.active [data-reveal]:nth-child(2){transition-delay:.22s}
+.scene.active [data-reveal]:nth-child(3){transition-delay:.32s}
+.scene.active [data-reveal]:nth-child(4){transition-delay:.42s}
+.scene.active [data-reveal]:nth-child(5){transition-delay:.52s}
+
+/* split text */
+.split{display:inline-block;vertical-align:top}
+.split .ch{
+  display:inline-block;
+  opacity:0;transform:translateY(.45em);
+  transition:opacity .8s var(--ease),transform .8s var(--ease);
+}
+.scene.active .split .ch{
+  opacity:1;transform:none;
+  transition-delay:calc(var(--i)*.035s);
+}
+
+/* ---------- SCENE 0 : HERO ---------- */
+.hero{justify-content:space-between}
+.hero-top{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.18em;color:var(--muted)}
+.hero-title{
+  font-family:var(--font-display);font-weight:800;
+  line-height:1.24;
+  letter-spacing:-.02em;text-transform:uppercase;
+  padding-top:.1em;
+}
+.hero-title .row{
+  display:flex;align-items:center;gap:2rem;
+  font-size:clamp(2.4rem,9vw,8.2rem);
+}
+.hero-title .row:nth-child(2){justify-content:flex-end}
+.hero-title .row.outline .txt{
+  color:var(--fg);-webkit-text-fill-color:transparent;-webkit-text-stroke:1.5px var(--fg);
+  transition:-webkit-text-fill-color .5s var(--ease);
+}
+.hero-title .row.outline:hover .txt{-webkit-text-fill-color:var(--fg)}
+.hero-title .star{
+  width:.35em;height:.35em;background:var(--fg);flex:none;
+  animation:spin 9s linear infinite;border-radius:2px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-bottom{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem}
+.hero-note{max-width:34ch;color:var(--muted);font-size:1rem;line-height:1.7;font-weight:300}
+.hero-hint{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.2em;color:var(--muted);display:flex;align-items:center;gap:.75rem;white-space:nowrap}
+.hero-hint .pulse{width:7px;height:7px;border-radius:50%;background:var(--fg);animation:pulse 1.6s ease infinite}
+@keyframes pulse{50%{opacity:.15;transform:scale(.6)}}
+
+/* marquee */
+.marquee-wrap{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:.75rem 0;margin-top:2rem}
+.marquee{display:flex;width:max-content;animation:marq 22s linear infinite}
+.marquee span{
+  font-family:var(--font-display);font-weight:600;font-size:1rem;letter-spacing:.1em;
+  text-transform:uppercase;padding:0 1.6rem;white-space:nowrap;color:var(--fg);
+}
+.marquee span i{font-style:normal;color:var(--muted);margin-left:1.5rem}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ---------- SCENE 1 : WORK ---------- */
+.work-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2rem}
+.scene-kicker{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.2em;color:var(--muted)}
+.scene-kicker b{color:var(--fg);font-weight:400}
+.work-head h2{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.5rem,3.4vw,2.6rem);text-transform:uppercase;
+  letter-spacing:-.01em;line-height:1.22;
+}
+
+.strip-viewport{flex:1;position:relative;overflow:hidden;cursor:none;touch-action:none;user-select:none;-webkit-user-select:none}
+.strip-viewport::before,.strip-viewport::after{
+  content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
+}
+.strip-viewport::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.strip-viewport::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.strip{
+  position:absolute;top:0;left:0;display:flex;gap:1.5rem;height:100%;
+  align-items:stretch;will-change:transform;
+}
+.card{
+  flex:none;position:relative;border:1px solid var(--line);
+  padding:1.5rem;display:flex;flex-direction:column;justify-content:space-between;
+  transition:background .45s var(--ease),color .45s var(--ease),border-color .45s,transform .45s var(--ease);
+  overflow:hidden;isolation:isolate;
+  text-decoration:none;color:inherit;cursor:none;
+}
+.card:hover{background:var(--fg);color:var(--bg);border-color:var(--fg);transform:translateY(-8px)}
+.card .idx{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.18em;color:inherit;opacity:.6;position:relative;z-index:1}
+.card .name{
+  font-family:var(--font-display);font-weight:700;text-transform:uppercase;
+  line-height:1.2;
+  font-size:clamp(1.3rem,2.6vw,2.2rem);margin-top:auto;
+  transition:transform .45s var(--ease);position:relative;z-index:1;
+}
+.card:hover .name{transform:translateX(10px)}
+.card .tags{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1rem;position:relative;z-index:1}
+.card .tag{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.14em;
+  border:1px solid currentColor;padding:.35em .8em;border-radius:99px;opacity:.75;
+}
+.art{position:absolute;inset:0;z-index:-1;opacity:.9}
+.art.dots{background-image:radial-gradient(currentColor 1px,transparent 1.5px);background-size:14px 14px;opacity:.18}
+.art.cross{background:
+  linear-gradient(currentColor,currentColor) 50% 50%/100% 3px no-repeat,
+  linear-gradient(currentColor,currentColor) 50% 50%/3px 100% no-repeat;opacity:.16}
+.art.img{background-size:cover;background-position:center;opacity:.55;transition:opacity .45s}
+.card:hover .art.img{opacity:.85}
+.card.w-lg{width:30rem}.card.w-md{width:22rem}.card.w-sm{width:17rem}
+.card.h-off{align-self:flex-start;height:78%}
+.card.inv{background:var(--fg);color:var(--bg)}
+.card.inv:hover{background:var(--bg);color:var(--fg);border-color:var(--fg)}
+.drag-hint{
+  position:absolute;right:1.2rem;bottom:.6rem;font-family:var(--font-mono);
+  font-size:.625rem;letter-spacing:.18em;color:var(--muted);z-index:3;pointer-events:none;
+}
+
+/* link view all */
+.view-all{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1rem;margin-top:1rem;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.2em;color:var(--fg);
+  transition:background .35s var(--ease),color .35s,border-color .35s;
+  cursor:none;text-decoration:none;
+}
+.view-all:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.view-all .arr{font-size:1.2rem;transition:transform .35s var(--ease)}
+.view-all:hover .arr{transform:translate(4px,-4px)}
+
+/* ---------- SCENE 2 : STUDIO ---------- */
+.statement{
+  font-family:var(--font-display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.3rem,3.6vw,3.1rem);line-height:1.35;letter-spacing:-.01em;
+  max-width:22ch;margin-bottom:2.5rem;
+  padding-top:.06em;
+}
+.statement em{font-style:normal;color:var(--fg);-webkit-text-fill-color:transparent;-webkit-text-stroke:1.2px var(--fg)}
+.bento{flex:1;display:grid;gap:1rem;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(2,1fr)}
+.tile{
+  border:1px solid var(--line);padding:1.4rem;display:flex;flex-direction:column;justify-content:space-between;
+  position:relative;overflow:hidden;transition:border-color .4s;
+}
+.tile:hover{border-color:var(--fg)}
+.tile .t-label{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.18em;color:var(--muted)}
+.tile .big{font-family:var(--font-display);font-weight:800;font-size:clamp(2.2rem,5vw,4.4rem);line-height:1.1}
+.tile.p-3{grid-column:span 3;grid-row:span 2}
+.tile.p-2{grid-column:span 2}
+.tile .phil{font-size:clamp(.9rem,1.4vw,1.1rem);line-height:1.75;color:var(--muted);font-weight:300;max-width:46ch;margin-top:auto}
+.tile .phil b{color:var(--fg);font-weight:600}
+.badge-spin{width:110px;height:110px;flex:none;animation:spin 12s linear infinite;margin:auto}
+.badge-spin text{font-family:var(--font-mono);font-size:9.5px;letter-spacing:3.5px;fill:var(--muted)}
+@media(max-width:900px){
+  .bento{grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(120px,auto)}
+  .tile.p-3,.tile.p-2{grid-column:span 2}
+}
+
+/* ---------- SCENE 3 : SERVICES ---------- */
+.svc-list{flex:1;display:flex;flex-direction:column;justify-content:center}
+.svc-row{
+  position:relative;display:flex;align-items:center;gap:2rem;
+  padding:1rem 1rem;border-top:1px solid var(--line);cursor:none;overflow:hidden;
+  transition:color .4s;color:inherit;text-decoration:none;
+}
+.svc-row:last-child{border-bottom:1px solid var(--line)}
+.svc-row .fill{
+  position:absolute;inset:0;background:var(--fg);transform:scaleY(0);transform-origin:top;
+  transition:transform .5s var(--ease);z-index:0;
+}
+.svc-row:hover .fill{transform:scaleY(1)}
+.svc-row:hover{color:var(--bg)}
+.svc-row>*{position:relative;z-index:1}
+.svc-row .n{font-family:var(--font-mono);font-size:.625rem;letter-spacing:.2em;opacity:.55;width:3rem;flex:none}
+.svc-row .name{
+  font-family:var(--font-display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(1.15rem,3.2vw,2.7rem);line-height:1.22;letter-spacing:-.01em;
+  transition:transform .5s var(--ease);
+}
+.svc-row:hover .name{transform:translateX(1.4rem)}
+.svc-row .meta{margin-left:auto;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.16em;color:var(--muted);text-align:right}
+.svc-row:hover .meta{color:var(--bg);opacity:.6}
+.svc-row .go{
+  margin-left:1.5rem;flex:none;
+  font-family:var(--font-mono);font-size:1.1rem;line-height:1;
+  opacity:0;transform:translateX(-8px);
+  transition:opacity .4s var(--ease),transform .4s var(--ease);
+}
+.svc-row:hover .go{opacity:1;transform:none}
+
+.svc-more{
+  margin-top:1.25rem;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1rem;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  font-family:var(--font-mono);font-size:.75rem;letter-spacing:.2em;color:var(--fg);
+  transition:background .35s var(--ease),color .35s,border-color .35s;
+  cursor:none;text-decoration:none;
+}
+.svc-more:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.svc-more .arrow{font-size:1.2rem;transition:transform .35s var(--ease)}
+.svc-more:hover .arrow{transform:translate(4px,-4px)}
+
+.svc-preview{
+  position:fixed;width:240px;height:300px;z-index:90;pointer-events:none;
+  opacity:0;visibility:hidden;transform:scale(.85);
+  transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s;
+  overflow:hidden;border:1px solid var(--fg);
+}
+.svc-preview.show{
+  opacity:1;visibility:visible;transform:scale(1);
+  transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s 0s;
+}
+.svc-preview .layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.svc-preview .layer.on{opacity:1}
+.pv-1{background:radial-gradient(circle at 50% 50%,#f5f5f2 0 60px,#0a0a0a 62px);color:#f5f5f2}
+.pv-2{background-image:linear-gradient(#f5f5f2 1px,transparent 1px),linear-gradient(90deg,#f5f5f2 1px,transparent 1px);background-size:20px 20px;color:#f5f5f2}
+.pv-3{background:repeating-linear-gradient(-45deg,#f5f5f2 0 14px,#0a0a0a 14px 28px);color:#0a0a0a}
+.pv-4{background:#f5f5f2;color:#0a0a0a}
+.svc-preview .glyph{font-family:var(--font-display);font-weight:800;font-size:5.5rem}
+
+/* ---------- SCENE 4 : CONTACT ---------- */
+.contact{justify-content:space-between}
+.contact-title{
+  font-family:var(--font-display);font-weight:800;text-transform:uppercase;
+  line-height:1.3;letter-spacing:-.02em;
+  padding-top:.12em;
+}
+.contact-title .row{display:block;font-size:clamp(1.7rem,6.2vw,5.4rem)}
+.contact-title .row.o{color:var(--fg);-webkit-text-fill-color:transparent;-webkit-text-stroke:1.5px var(--fg)}
+.mail{
+  display:block;width:100%;text-align:center;margin:2rem 0;
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(1.1rem,4.6vw,4rem);letter-spacing:.01em;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:1.5rem 1rem;position:relative;overflow:hidden;
+}
+.mail .fill{position:absolute;inset:0;background:var(--fg);transform:translateY(101%);transition:transform .55s var(--ease)}
+.mail:hover .fill{transform:none}
+.mail .inner{position:relative;z-index:1;transition:color .4s}
+.mail:hover .inner{color:var(--bg)}
+.contact-actions{display:flex;justify-content:space-between;align-items:center;gap:2rem;flex-wrap:wrap}
+.socials{display:flex;gap:1rem}
+.socials a{
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.16em;color:var(--muted);
+  border:1px solid var(--line);padding:.75rem 1.5rem;border-radius:99px;min-height:44px;display:flex;align-items:center;
+  transition:color .35s,border-color .35s,background .35s;
+}
+.socials a:hover{color:var(--bg);background:var(--fg);border-color:var(--fg)}
+.magnet-btn{
+  width:150px;height:150px;border:1px solid var(--line);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex:none;
+  font-family:var(--font-mono);font-size:.625rem;letter-spacing:.2em;text-align:center;
+  transition:background .45s var(--ease),color .45s,border-color .45s;
+  will-change:transform;
+}
+.magnet-btn:hover{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.foot-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:.625rem;letter-spacing:.16em;color:var(--muted);flex-wrap:wrap;gap:.5rem}
+
+/* ---------- TRANSITION SWEEP ---------- */
+.sweep{
+  position:fixed;inset:0;z-index:150;background:var(--fg);
+  transform:translateY(101%);pointer-events:none;
+  display:none;align-items:center;justify-content:center;
+}
+.sweep .num{
+  font-family:var(--font-display);font-weight:800;font-size:clamp(5rem,20vw,16rem);
+  color:var(--bg);line-height:1;
+}
+
+/* ---------- MOBILE ---------- */
+@media(max-width:720px){
+  .scene{padding:5rem 1.25rem 4rem}
+  header{padding:1.25rem}
+  .scene-index{left:1.25rem}
+  .nav-dots{right:.75rem}
+  .card.w-lg{width:19rem}.card.w-md{width:16rem}.card.w-sm{width:13rem}
+  .strip-viewport::before,.strip-viewport::after{width:40px}
+  .svc-row .meta{display:none}
+  .svc-row .go{display:none}
+  .magnet-btn{width:120px;height:120px}
+  .hero-bottom{flex-direction:column;align-items:flex-start;gap:1rem}
+  .hero-hint{display:none}
+  .hero-title .row{font-size:clamp(1.9rem,8.5vw,3rem)}
+  .contact-title .row{font-size:clamp(1.4rem,6.5vw,2.4rem)}
+  .statement{font-size:clamp(1.05rem,4.2vw,1.6rem)}
+}
+
+/* ---------- TOUCH ---------- */
+@media (pointer:coarse){
+  body,button,a,.svc-row,.nav-dots button,.magnet-btn,.drag-hint,.svc-more,.view-all,.head-link,.card,.lang-btn{cursor:pointer}
+  .cursor-dot,.cursor-ring{display:none}
+}
+
+/* ---------- REDUCED MOTION ---------- */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  [data-reveal],.split .ch{opacity:1!important;transform:none!important}
+  #nfx{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="nfx" aria-hidden="true">
+  <div class="nfx-glow"></div>
+  <div class="nfx-word">
+    <span class="ch" style="--i:0">N</span><span class="ch" style="--i:1">D</span><span class="ch" style="--i:2">E</span><span class="ch" style="--i:3">C</span><span class="ch" style="--i:4">O</span><span class="ch" style="--i:5">R</span>
+  </div>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true" data-label=""></div>
+
+<header>
+  <div class="logo" data-hover>NDECOR<sup>®</sup></div>
+  <div class="head-meta">
+    <div class="lang-switcher" aria-label="Language">
+      <button class="lang-btn active" data-lang="vi" data-hover>VI</button>
+      <span class="lang-sep">/</span>
+      <button class="lang-btn" data-lang="en" data-hover>EN</button>
+    </div>
+    <a href="./san-pham.html" class="head-link" data-hover data-i18n="head.portfolio">PORTFOLIO</a>
+    <span class="hide-m"><span data-i18n="head.clock">ĐỒNG NAI</span> — <b id="clock">--:--:--</b></span>
+    <span data-i18n="head.tagline">WABI-SABI DESIGN STUDIO</span>
+  </div>
+</header>
+
+<nav class="nav-dots" aria-label="Scene navigation">
+  <button data-goto="0" aria-label="Trang chủ"><span class="lbl" data-i18n="nav.home">TRANG CHỦ</span><span class="dot"></span></button>
+  <button data-goto="1" aria-label="Dự án"><span class="lbl" data-i18n="nav.work">DỰ ÁN</span><span class="dot"></span></button>
+  <button data-goto="2" aria-label="Studio"><span class="lbl" data-i18n="nav.studio">STUDIO</span><span class="dot"></span></button>
+  <button data-goto="3" aria-label="Dịch vụ"><span class="lbl" data-i18n="nav.service">DỊCH VỤ</span><span class="dot"></span></button>
+  <button data-goto="4" aria-label="Liên hệ"><span class="lbl" data-i18n="nav.contact">LIÊN HỆ</span><span class="dot"></span></button>
+</nav>
+
+<div class="scene-index" aria-hidden="true">
+  <b id="idxNow">01</b> / 05
+  <span class="bar"><i id="idxBar"></i></span>
+</div>
+
+<main id="main">
+
+  <!-- ===== 00 HERO ===== -->
+  <section class="scene hero" data-scene="0" aria-label="NDECOR Studio">
+    <div class="scene-inner">
+      <div class="hero-top" data-reveal>
+        <span data-i18n="hero.est">THÀNH LẬP 2025</span>
+        <span data-i18n="hero.location">ĐỒNG NAI · TÂY BẮC — ĐANG NHẬN DỰ ÁN Q4</span>
+      </div>
+
+      <div class="hero-title" aria-label="NDECOR Studio">
+        <div class="row" data-reveal>
+          <span class="txt split" data-split data-i18n="hero.title1">NDECOR</span>
+          <span class="star" aria-hidden="true"></span>
+        </div>
+        <div class="row outline" data-reveal>
+          <span class="txt split" data-split data-i18n="hero.title2">STUDIO</span>
+        </div>
+        <div class="row" data-reveal>
+          <span class="txt split" data-split data-i18n="hero.title3">ĐỒNG NAI</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="hero-bottom" data-reveal>
+          <p class="hero-note" data-i18n="hero.note">NDECOR là studio thiết kế Wabi-Sabi &amp; Japandi tại Đồng Nai. Chúng tôi dựng không gian từ gỗ tái chế, bê tông mộc và tre — nơi mỗi vết sứt mẻ đều có lý do tồn tại.</p>
+          <span class="hero-hint"><span class="pulse"></span><span data-i18n="hero.hint">LĂN CHUỘT / PHẢI←→ ĐỂ KHÁM PHÁ</span></span>
+        </div>
+        <div class="marquee-wrap" data-reveal>
+          <div class="marquee" id="marquee" aria-hidden="true">
+            <span data-i18n="hero.marquee1" data-i18n-html>NGOẠI THẤT<i>✦</i></span>
+            <span data-i18n="hero.marquee2" data-i18n-html>NỘI THẤT<i>✦</i></span>
+            <span data-i18n="hero.marquee3" data-i18n-html>F&amp;B CÀ PHÊ<i>✦</i></span>
+            <span data-i18n="hero.marquee4" data-i18n-html>F&amp;B NHÀ HÀNG<i>✦</i></span>
+            <span data-i18n="hero.marquee5" data-i18n-html>WABI-SABI<i>✦</i></span>
+            <span data-i18n="hero.marquee6" data-i18n-html>JAPANDI<i>✦</i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 01 WORK ===== -->
+  <section class="scene" data-scene="1" aria-label="Dự án tiêu biểu">
+    <div class="scene-inner">
+      <div class="work-head" data-reveal>
+        <div>
+          <div class="scene-kicker"><b>01</b> — <span data-i18n="work.kicker">DỰ ÁN TIÊU BIỂU</span></div>
+          <h2><span data-i18n="work.title">DỰ ÁN</span><sup style="font-size:.4em" id="work-count">(—)</sup></h2>
+        </div>
+        <div class="scene-kicker" data-i18n="work.years">2023 → 2026</div>
+      </div>
+
+      <div class="strip-viewport" id="stripViewport" data-reveal>
+        <div class="strip" id="strip"></div>
+        <span class="drag-hint" data-i18n="work.drag">← KÉO ĐỂ XEM THÊM →</span>
+      </div>
+
+      <a href="./san-pham.html" class="view-all" data-hover data-reveal>
+        <span data-i18n="work.viewAll">XEM TẤT CẢ SẢN PHẨM</span>
+        <span class="arr" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== 02 STUDIO ===== -->
+  <section class="scene" data-scene="2" aria-label="Về studio">
+    <div class="scene-inner">
+      <div class="scene-kicker" data-reveal><b>02</b> — <span data-i18n="studio.kicker">VỀ STUDIO</span></div>
+      <h2 class="statement" data-reveal data-i18n="studio.statement" data-i18n-html>
+        Tối giản là <em>xóa bỏ</em> mọi thứ không cần thiết — để lại duy nhất <em>chất riêng</em> của gỗ, đá và sương.
+      </h2>
+      <div class="bento" data-reveal>
+        <div class="tile p-3" data-hover>
+          <span class="t-label" data-i18n="studio.philLabel">TRIẾT LÝ / MANIFESTO</span>
+          <p class="phil" data-i18n="studio.philText" data-i18n-html>
+            Chúng tôi không làm web. Chúng tôi dựng <b>không gian sống</b> — nơi bê tông mộc
+            để lại dấu tay, gỗ tái chế giữ thớ cũ, tre uốn theo hình núi.
+            Wabi-Sabi gặp Japandi, sương Đồng Nai gặp gió Tây Bắc.
+          </p>
+        </div>
+        <div class="tile p-2" data-hover>
+          <span class="t-label" data-i18n="studio.projectsLabel">DỰ ÁN</span>
+          <span class="big">12×</span>
+          <span class="t-label" data-i18n="studio.projectsSub">DỰ ÁN THỰC HIỆN · ĐỒNG NAI · TÂY BẮC</span>
+        </div>
+        <div class="tile" data-hover>
+          <span class="t-label" data-i18n="studio.clockLabel">GIỜ ĐỒNG NAI</span>
+          <span class="big" id="clockBig">--:--</span>
+        </div>
+        <div class="tile p-2" data-hover>
+          <svg class="badge-spin" viewBox="0 0 110 110" aria-hidden="true">
+            <defs><path id="circ" d="M55,55 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0"/></defs>
+            <text><textPath href="#circ">WABI-SABI ✦ JAPANDI ✦ NDECOR ✦ STUDIO ✦ </textPath></text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 SERVICES ===== -->
+  <section class="scene" data-scene="3" aria-label="Dịch vụ">
+    <div class="scene-inner">
+      <div class="scene-kicker" data-reveal style="margin-bottom:1.5rem"><b>03</b> — <span data-i18n="service.kicker">NĂNG LỰC</span></div>
+      <div class="svc-list" data-reveal>
+        <a href="dich-vu.html#svc-1" class="svc-row" data-svc="1" data-hover>
+          <span class="fill"></span><span class="n">/01</span>
+          <h3 class="name" data-i18n="service.name1">Thiết kế Ngoại thất</h3>
+          <span class="meta" data-i18n="service.meta1" data-i18n-html>VƯỜN · MẶT TIỀN<br>CẢNH QUAN</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+        <a href="dich-vu.html#svc-2" class="svc-row" data-svc="2" data-hover>
+          <span class="fill"></span><span class="n">/02</span>
+          <h3 class="name" data-i18n="service.name2">Thiết kế Nội thất</h3>
+          <span class="meta" data-i18n="service.meta2" data-i18n-html>GỖ · ĐÁ · TRE<br>ÁNH SÁNG</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+        <a href="dich-vu.html#svc-3" class="svc-row" data-svc="3" data-hover>
+          <span class="fill"></span><span class="n">/03</span>
+          <h3 class="name" data-i18n="service.name3">F&amp;B Trọn gói — Chuyên Cà phê</h3>
+          <span class="meta" data-i18n="service.meta3" data-i18n-html>CONCEPT · QUẦY BAR<br>TRỌN GÓI</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+        <a href="dich-vu.html#svc-4" class="svc-row" data-svc="4" data-hover>
+          <span class="fill"></span><span class="n">/04</span>
+          <h3 class="name" data-i18n="service.name4">F&amp;B Trọn gói — Nhà hàng</h3>
+          <span class="meta" data-i18n="service.meta4" data-i18n-html>BẾP MỞ ·<br>TRẢI NGHIỆM</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <a href="dich-vu.html" class="svc-more" data-hover data-reveal>
+        <span data-i18n="service.viewDetails">XEM CHI TIẾT DỊCH VỤ</span>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <div class="svc-preview" id="svcPreview" aria-hidden="true">
+        <div class="layer pv-1" data-pv="1"><span class="glyph">NT</span></div>
+        <div class="layer pv-2" data-pv="2"><span class="glyph">NỘI</span></div>
+        <div class="layer pv-3" data-pv="3"><span class="glyph">CF</span></div>
+        <div class="layer pv-4" data-pv="4"><span class="glyph">FB</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 04 CONTACT ===== -->
+  <section class="scene" data-scene="4" aria-label="Liên hệ">
+    <div class="scene-inner contact">
+      <div class="scene-kicker" data-reveal><b>04</b> — <span data-i18n="contact.kicker">LIÊN HỆ</span></div>
+      <div>
+        <h2 class="contact-title" data-reveal>
+          <span class="row split" data-split data-i18n="contact.title1">HÃY CÙNG</span>
+          <span class="row o split" data-split data-i18n="contact.title2">TẠO NÊN</span>
+          <span class="row split" data-split data-i18n="contact.title3">KHÔNG GIAN</span>
+        </h2>
+        <a class="mail" href="https://zalo.me/0373681667" target="_blank" rel="noopener" data-hover data-reveal>
+          <span class="fill" aria-hidden="true"></span>
+          <span class="inner" data-i18n="contact.zalo">ZALO: 0373681667 ↗</span>
+        </a>
+      </div>
+      <div class="contact-actions" data-reveal>
+        <div class="socials">
+          <a href="https://www.behance.net/" target="_blank" rel="noopener" data-hover>BEHANCE</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener" data-hover>INSTAGRAM</a>
+          <a href="https://www.facebook.com/" target="_blank" rel="noopener" data-hover>FACEBOOK</a>
+        </div>
+        <button class="magnet-btn" id="magnet" data-hover data-i18n="contact.magnet" data-i18n-html>
+          START A<br>PROJECT ↗
+        </button>
+      </div>
+      <div class="foot-meta" data-reveal>
+        <span data-i18n="contact.footer1">© 2026 NDECOR® STUDIO</span>
+        <span data-i18n="contact.footer2">ĐỒNG NAI, VIỆT NAM</span>
+        <span data-i18n="contact.footer3">MADE WITH OBSESSION</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="sweep" id="sweep" aria-hidden="true"><span class="num" id="sweepNum">01</span></div>
+
+<!-- i18next libraries -->
+<script src="https://cdn.jsdelivr.net/npm/i18next@23/dist/umd/i18next.min.js"></script>
+
+<!-- DATA: products -->
+<script src="data/products.js"></script>
+
+<!-- TRANSLATIONS (inline, không cần fetch → chạy được cả file://) -->
+<script>
+window.NDECOR_I18N = {
+  vi: {
+    translation: {
+      nav: {
+        home: "TRANG CHỦ",
+        work: "DỰ ÁN",
+        studio: "STUDIO",
+        service: "DỊCH VỤ",
+        contact: "LIÊN HỆ"
+      },
+      head: {
+        portfolio: "PORTFOLIO",
+        clock: "ĐỒNG NAI",
+        tagline: "WABI-SABI DESIGN STUDIO"
+      },
+      hero: {
+        est: "THÀNH LẬP 2025",
+        location: "ĐỒNG NAI · TÂY BẮC — ĐANG NHẬN DỰ ÁN Q4",
+        title1: "NDECOR",
+        title2: "STUDIO",
+        title3: "ĐỒNG NAI",
+        note: "NDECOR là studio thiết kế Wabi-Sabi &amp; Japandi tại Đồng Nai. Chúng tôi dựng không gian từ gỗ tái chế, bê tông mộc và tre — nơi mỗi vết sứt mẻ đều có lý do tồn tại.",
+        hint: "LĂN CHUỘT / PHẢI←→ ĐỂ KHÁM PHÁ",
+        marquee1: "NGOẠI THẤT<i>✦</i>",
+        marquee2: "NỘI THẤT<i>✦</i>",
+        marquee3: "F&amp;B CÀ PHÊ<i>✦</i>",
+        marquee4: "F&amp;B NHÀ HÀNG<i>✦</i>",
+        marquee5: "WABI-SABI<i>✦</i>",
+        marquee6: "JAPANDI<i>✦</i>"
+      },
+      work: {
+        kicker: "DỰ ÁN TIÊU BIỂU",
+        title: "DỰ ÁN",
+        years: "2023 → 2026",
+        drag: "← KÉO ĐỂ XEM THÊM →",
+        viewAll: "XEM TẤT CẢ SẢN PHẨM"
+      },
+      studio: {
+        kicker: "VỀ STUDIO",
+        statement: "Tối giản là <em>xóa bỏ</em> mọi thứ không cần thiết — để lại duy nhất <em>chất riêng</em> của gỗ, đá và sương.",
+        philLabel: "TRIẾT LÝ / MANIFESTO",
+        philText: "Chúng tôi không làm web. Chúng tôi dựng <b>không gian sống</b> — nơi bê tông mộc để lại dấu tay, gỗ tái chế giữ thớ cũ, tre uốn theo hình núi. Wabi-Sabi gặp Japandi, sương Đồng Nai gặp gió Tây Bắc.",
+        projectsLabel: "DỰ ÁN",
+        projectsSub: "DỰ ÁN THỰC HIỆN · ĐỒNG NAI · TÂY BẮC",
+        clockLabel: "GIỜ ĐỒNG NAI"
+      },
+      service: {
+        kicker: "NĂNG LỰC",
+        name1: "Thiết kế Ngoại thất",
+        meta1: "VƯỜN · MẶT TIỀN<br>CẢNH QUAN",
+        name2: "Thiết kế Nội thất",
+        meta2: "GỖ · ĐÁ · TRE<br>ÁNH SÁNG",
+        name3: "F&amp;B Trọn gói — Chuyên Cà phê",
+        meta3: "CONCEPT · QUẦY BAR<br>TRỌN GÓI",
+        name4: "F&amp;B Trọn gói — Nhà hàng",
+        meta4: "BẾP MỞ ·<br>TRẢI NGHIỆM",
+        viewDetails: "XEM CHI TIẾT DỊCH VỤ"
+      },
+      contact: {
+        kicker: "LIÊN HỆ",
+        title1: "HÃY CÙNG",
+        title2: "TẠO NÊN",
+        title3: "KHÔNG GIAN",
+        zalo: "ZALO: 0373681667 ↗",
+        magnet: "BẮT ĐẦU<br>DỰ ÁN ↗",
+        footer1: "© 2026 NDECOR® STUDIO",
+        footer2: "ĐỒNG NAI, VIỆT NAM",
+        footer3: "LÀM BẰNG ĐAM MÊ"
+      }
+    }
+  },
+  en: {
+    translation: {
+      nav: {
+        home: "HOME",
+        work: "WORK",
+        studio: "STUDIO",
+        service: "SERVICE",
+        contact: "CONTACT"
+      },
+      head: {
+        portfolio: "PORTFOLIO",
+        clock: "DONG NAI",
+        tagline: "WABI-SABI DESIGN STUDIO"
+      },
+      hero: {
+        est: "EST. 2025",
+        location: "DONG NAI · NORTHWEST — ACCEPTING Q4",
+        title1: "NDECOR",
+        title2: "STUDIO",
+        title3: "DONG NAI",
+        note: "NDECOR is a Wabi-Sabi &amp; Japandi design studio based in Dong Nai. We build spaces from reclaimed wood, raw concrete and bamboo — where every crack has a reason to exist.",
+        hint: "SCROLL / PRESS←→ TO EXPLORE",
+        marquee1: "EXTERIOR<i>✦</i>",
+        marquee2: "INTERIOR<i>✦</i>",
+        marquee3: "F&amp;B COFFEE<i>✦</i>",
+        marquee4: "F&amp;B RESTAURANT<i>✦</i>",
+        marquee5: "WABI-SABI<i>✦</i>",
+        marquee6: "JAPANDI<i>✦</i>"
+      },
+      work: {
+        kicker: "SELECTED WORK",
+        title: "WORK",
+        years: "2023 → 2026",
+        drag: "← DRAG TO EXPLORE →",
+        viewAll: "VIEW ALL PROJECTS"
+      },
+      studio: {
+        kicker: "THE STUDIO",
+        statement: "Minimalism is <em>erasing</em> everything unnecessary — leaving only the <em>essence</em> of wood, stone and mist.",
+        philLabel: "PHILOSOPHY / MANIFESTO",
+        philText: "We don't build websites. We craft <b>living spaces</b> — where raw concrete keeps handprints, reclaimed wood holds its old grain, bamboo bends like the mountains. Wabi-Sabi meets Japandi, Dong Nai mist meets Northwest wind.",
+        projectsLabel: "PROJECTS",
+        projectsSub: "PROJECTS DELIVERED · DONG NAI · NORTHWEST",
+        clockLabel: "DONG NAI TIME"
+      },
+      service: {
+        kicker: "CAPABILITIES",
+        name1: "Exterior Design",
+        meta1: "GARDEN · FACADE<br>LANDSCAPE",
+        name2: "Interior Design",
+        meta2: "WOOD · STONE · BAMBOO<br>LIGHTING",
+        name3: "F&amp;B Full Service — Coffee",
+        meta3: "CONCEPT · BAR<br>FULL SERVICE",
+        name4: "F&amp;B Full Service — Restaurant",
+        meta4: "OPEN KITCHEN ·<br>EXPERIENCE",
+        viewDetails: "VIEW SERVICE DETAILS"
+      },
+      contact: {
+        kicker: "GET IN TOUCH",
+        title1: "LET'S",
+        title2: "CREATE",
+        title3: "SPACE",
+        zalo: "ZALO: 0373681667 ↗",
+        magnet: "START A<br>PROJECT ↗",
+        footer1: "© 2026 NDECOR® STUDIO",
+        footer2: "DONG NAI, VIETNAM",
+        footer3: "MADE WITH OBSESSION"
+      }
+    }
+  }
+};
+</script>
+
+<script>
+(function(){
+"use strict";
+const $=(s,c)=>(c||document).querySelector(s);
+const $$=(s,c)=>Array.from((c||document).querySelectorAll(s));
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================================================================
+   I18N — split text + apply translations
+   ================================================================ */
+
+function splitText(el){
+  const key = el.getAttribute('data-i18n');
+  const txt = key ? i18next.t(key) : el.textContent.trim();
+  el.innerHTML = '';
+  [...txt].forEach((c,i)=>{
+    const s = document.createElement('span');
+    s.className = 'ch';
+    s.style.setProperty('--i', i);
+    s.innerHTML = c === ' ' ? '&nbsp;' : c;
+    el.appendChild(s);
+  });
+}
+
+function applyTranslations(){
+  // 1. Non-split elements
+  document.querySelectorAll('[data-i18n]:not(.split)').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const t = i18next.t(key);
+    if(!t || t === key) return;
+    if(el.hasAttribute('data-i18n-html')){
+      el.innerHTML = t;
+    } else {
+      el.textContent = t;
+    }
+  });
+
+  // 2. Split elements (hero title, contact title)
+  document.querySelectorAll('.split[data-i18n]').forEach(el=>{
+    splitText(el);
+  });
+}
+
+function updateLangButtons(lang){
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+/* ---------- IP detection ---------- */
+async function detectLanguage(){
+  // Priority 1: user's saved choice
+  const saved = localStorage.getItem('ndecor-lang');
+  if(saved === 'vi' || saved === 'en') return saved;
+
+  // Priority 2: IP geolocation (with 800ms timeout)
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 800);
+    const res = await fetch('https://ipapi.co/json/', { signal: ctrl.signal });
+    clearTimeout(timer);
+    const data = await res.json();
+    if(data.country_code === 'VN') return 'vi';
+    if(data.country_code) return 'en';
+  } catch(e){ /* ignore */ }
+
+  // Priority 3: browser language
+  const nav = (navigator.language || 'vi').toLowerCase();
+  return nav.startsWith('vi') ? 'vi' : 'en';
+}
+
+/* ---------- Init i18n (sync with navigator default, then async override) ---------- */
+const navLang = (navigator.language || 'vi').toLowerCase().startsWith('vi') ? 'vi' : 'en';
+
+i18next.init({
+  lng: navLang,
+  fallbackLng: 'vi',
+  supportedLngs: ['vi','en'],
+  resources: window.NDECOR_I18N
+}).then(()=>{
+  // Duplicate marquee (12 spans total) trước khi translate
+  const marq = document.getElementById('marquee');
+  if(marq) marq.innerHTML += marq.innerHTML;
+
+  applyTranslations();
+  updateLangButtons(navLang);
+
+  // Async: detect and switch if needed
+  detectLanguage().then(target=>{
+    if(target && target !== i18next.language){
+      i18next.changeLanguage(target).then(()=>{
+        applyTranslations();
+        updateLangButtons(target);
+        renderProducts();
+      });
+    }
+  });
+});
+
+/* ---------- Language switch click ---------- */
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.lang-btn');
+  if(!btn) return;
+  const lang = btn.dataset.lang;
+  if(lang === i18next.language) return;
+  i18next.changeLanguage(lang).then(()=>{
+    localStorage.setItem('ndecor-lang', lang);
+    applyTranslations();
+    updateLangButtons(lang);
+    renderProducts();
+  });
+});
+
+/* ================================================================
+   PRODUCTS RENDER (data-driven)
+   ================================================================ */
+const CARD_SIZES = ['lg','md','sm','md','lg','sm'];
+const stripEl = document.getElementById('strip');
+const products = window.NDECOR_PRODUCTS || [];
+
+function renderProducts(){
+  if(!stripEl) return;
+  stripEl.innerHTML = '';
+  const lang = i18next.language;
+  products.forEach((p, i)=>{
+    const size = CARD_SIZES[i % CARD_SIZES.length];
+    const classes = ['card','w-'+size];
+    if(!p.image){ classes.push('inv','h-off'); }
+
+    const titleLines = (lang === 'en' && p.titleLines_en) ? p.titleLines_en : p.titleLines;
+    const tags = (lang === 'en' && p.tags_en) ? p.tags_en : p.tags;
+
+    const a = document.createElement('a');
+    a.href = 'san-pham/chi-tiet.html?id=' + encodeURIComponent(p.id);
+    a.className = classes.join(' ');
+    a.setAttribute('data-hover','');
+
+    const art = p.image
+      ? `<div class="art img" style="background-image:url('${p.image}')"></div>`
+      : `<div class="art cross"></div>`;
+
+    a.innerHTML = `
+      ${art}
+      <span class="idx">${p.num} / ${p.year}</span>
+      <h3 class="name">${titleLines.join('<br>')}</h3>
+      <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`;
+    stripEl.appendChild(a);
+  });
+
+  const countEl = document.getElementById('work-count');
+  if(countEl) countEl.textContent = '(' + String(products.length).padStart(2,'0') + ')';
+
+  renderStrip();
+}
+
+/* ---------- scene manager ---------- */
+const scenes=$$('.scene');
+const dots=$$('.nav-dots button');
+const sweep=$('#sweep'),sweepNum=$('#sweepNum');
+const idxNow=$('#idxNow'),idxBar=$('#idxBar');
+let cur=0,busy=false;
+
+const nfx=document.getElementById('nfx');
+if(nfx){
+  if(reduced){
+    nfx.remove();
+    scenes[0].classList.add('active');
+    syncUI();
+  } else {
+    busy=true;
+    setTimeout(()=>{
+      nfx.classList.add('cut');
+      scenes[0].classList.add('active');
+      syncUI();
+    },2500);
+    setTimeout(()=>{
+      nfx.remove();
+      busy=false;
+    },3200);
+  }
+}
+
+function pad(n){return String(n+1).padStart(2,'0')}
+function syncUI(){
+  dots.forEach((d,i)=>d.classList.toggle('active',i===cur));
+  idxNow.textContent=pad(cur);
+  idxBar.style.transform='translateX('+(cur*100)+'%)';
+}
+function show(i){
+  scenes[cur].classList.remove('active');
+  cur=i;
+  scenes[cur].classList.add('active');
+  syncUI();
+}
+function goto(i){
+  i=Math.max(0,Math.min(scenes.length-1,i));
+  if(busy||i===cur)return;
+  const dir=i>cur?1:-1;
+  if(reduced){show(i);return}
+  busy=true;
+  sweepNum.textContent=pad(i);
+  sweep.style.display='flex';
+  sweep.style.transition='none';
+  sweep.style.transform=`translateY(${dir>0?101:-101}%)`;
+  void sweep.offsetHeight;
+  requestAnimationFrame(()=>{
+    sweep.style.transition='transform .55s cubic-bezier(.7,0,.2,1)';
+    sweep.style.transform='translateY(0)';
+    setTimeout(()=>{
+      show(i);
+      sweep.style.transition='transform .55s cubic-bezier(.7,0,.2,1)';
+      sweep.style.transform=`translateY(${dir>0?-101:101}%)`;
+      setTimeout(()=>{sweep.style.display='none';busy=false},560);
+    },570);
+  });
+}
+
+/* wheel */
+let wheelLock=false;
+window.addEventListener('wheel',e=>{
+  if(busy||wheelLock)return;
+  if(Math.abs(e.deltaY)<18)return;
+  if(e.target.closest('.strip-viewport'))return;
+  wheelLock=true;setTimeout(()=>wheelLock=false,1100);
+  goto(cur+(e.deltaY>0?1:-1));
+},{passive:true});
+
+/* touch swipe */
+let tY=null;
+window.addEventListener('touchstart',e=>{
+  if(e.target.closest('.strip-viewport'))return;
+  tY=e.touches[0].clientY;
+},{passive:true});
+window.addEventListener('touchend',e=>{
+  if(tY===null)return;
+  const d=tY-e.changedTouches[0].clientY;
+  if(Math.abs(d)>60)goto(cur+(d>0?1:-1));
+  tY=null;
+},{passive:true});
+
+/* keys */
+window.addEventListener('keydown',e=>{
+  if(['ArrowDown','ArrowRight','PageDown'].includes(e.key))goto(cur+1);
+  if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key))goto(cur-1);
+});
+dots.forEach((d,i)=>d.addEventListener('click',()=>goto(i)));
+
+syncUI();
+
+/* ---------- cursor ---------- */
+const dotEl=$('.cursor-dot'),ringEl=$('.cursor-ring');
+let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
+window.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dotEl.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+});
+(function loop(){
+  rx+=(mx-rx)*.16;ry+=(my-ry)*.16;
+  ringEl.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(loop);
+})();
+document.addEventListener('mouseover',e=>{
+  const h=e.target.closest('[data-hover]');
+  ringEl.classList.toggle('is-hover',!!h);
+});
+
+/* ---------- clocks ---------- */
+function tick(){
+  const d=new Date();
+  const t=d.toLocaleTimeString('vi-VN',{hour12:false});
+  const c=$('#clock');if(c)c.textContent=t;
+  const b=$('#clockBig');if(b)b.textContent=t.slice(0,5);
+}
+setInterval(tick,1000);tick();
+
+/* ---------- drag strip ---------- */
+const vp=document.getElementById('stripViewport');
+let sx=0,px=0,vx=0,lastX=0,raf=null,dragging=false;
+let mouseStartX=0,wasDrag=false;
+
+function clampStrip(){
+  const max=0,min=Math.min(0,vp.clientWidth-stripEl.scrollWidth-40);
+  px=Math.max(min,Math.min(max,px));
+}
+function renderStrip(){
+  if(!vp||!stripEl) return;
+  clampStrip();
+  const skew=Math.max(-6,Math.min(6,vx*.04));
+  stripEl.style.transform=`translateX(${px}px) skewX(${skew}deg)`;
+}
+function momentum(){
+  px+=vx;
+  const min=Math.min(0,vp.clientWidth-stripEl.scrollWidth-40);
+  if(px<=min||px>=0){px=Math.max(min,Math.min(0,px));vx=0;}
+  vx*=.94;
+  renderStrip();
+  if(Math.abs(vx)>.4&&!dragging)raf=requestAnimationFrame(momentum);
+}
+vp.addEventListener('pointerdown',e=>{
+  dragging=true;lastX=e.clientX;sx=px;vx=0;mouseStartX=e.clientX;
+  cancelAnimationFrame(raf);
+  vp.setPointerCapture(e.pointerId);
+});
+vp.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  const nx=sx+(e.clientX-lastX)*1.4;
+  vx=nx-px;px=nx;renderStrip();
+});
+['pointerup','pointercancel'].forEach(ev=>vp.addEventListener(ev,e=>{
+  if(!dragging)return;dragging=false;
+  const moved=Math.abs((e.clientX||mouseStartX)-mouseStartX)>10;
+  if(moved){wasDrag=true;setTimeout(()=>wasDrag=false,50);}
+  vx=Math.max(-40,Math.min(40,vx));
+  cancelAnimationFrame(raf);raf=requestAnimationFrame(momentum);
+}));
+vp.addEventListener('click',e=>{
+  if(wasDrag){e.preventDefault();e.stopPropagation();}
+},true);
+vp.addEventListener('wheel',e=>{
+  px-=e.deltaY;vx=0;renderStrip();
+},{passive:true});
+
+/* Initial render (fallback if i18n chưa xong) */
+if(stripEl && stripEl.children.length === 0){
+  // Will be called again after i18n init
+  if(window.i18next){
+    renderProducts();
+  } else {
+    // Chờ i18n init, được gọi trong .then() ở trên
+  }
+}
+
+/* ---------- services preview ---------- */
+const pv=$('#svcPreview');
+let pvOn=false;
+$$('.svc-row').forEach(row=>{
+  row.addEventListener('mouseenter',e=>{
+    pvOn=true;
+    pv.style.left=(e.clientX+26)+'px';
+    pv.style.top=(e.clientY-150)+'px';
+    $$('.layer',pv).forEach(l=>l.classList.toggle('on',l.dataset.pv===row.dataset.svc));
+    pv.classList.add('show');
+    ringEl.classList.add('is-hover');
+  });
+  row.addEventListener('mouseleave',()=>{
+    pvOn=false;pv.classList.remove('show');
+  });
+});
+window.addEventListener('mousemove',e=>{
+  if(!pvOn)return;
+  pv.style.left=(e.clientX+26)+'px';
+  pv.style.top=(e.clientY-150)+'px';
+});
+
+/* ---------- magnetic button ---------- */
+const mg=$('#magnet');
+if(mg){
+  const parent=mg.parentElement;
+  parent.addEventListener('mousemove',e=>{
+    const r=mg.getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const dx=(e.clientX-cx)*.25,dy=(e.clientY-cy)*.25;
+    mg.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  parent.addEventListener('mouseleave',()=>{
+    mg.style.transition='transform .6s cubic-bezier(.16,1,.3,1)';
+    mg.style.transform='';
+    setTimeout(()=>mg.style.transition='',600);
+  });
+  mg.addEventListener('click',()=>{
+    if(cur!==4)goto(4);
+  });
+}
+})();
+</script>
+</body>
+</html>
